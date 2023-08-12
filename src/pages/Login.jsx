@@ -10,12 +10,9 @@ import TextField from "@mui/material/TextField"
 import { Button } from "@mui/material"
 import { Form, Formik } from "formik"
 import { object, string } from "yup"
-import { login } from "../service/authApiCall"
+import useAuthCall from "../hooks/useAuthCall"
 
-// import { toastSuccessNotify } from "../helper/ToastNotify"
-
-let LoginSchema = object({
-  
+const LoginSchema = object({  
   email: string()
   .email("Geçerli bie email giriniz")
   .required("Lütfen bu alanı doldurunuz"),
@@ -30,7 +27,8 @@ let LoginSchema = object({
 });
 
 const Login = () => {
-  // const navigate = useNavigate()
+
+  const {login} =useAuthCall()
 
   return (
     <Container maxWidth="lg">
