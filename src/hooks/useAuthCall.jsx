@@ -28,7 +28,7 @@ import axios from "axios";
 import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { fetchFail, fetchStart, loginSuccess, logoutSuccess } from "../features/authSlice";
+import { fetchFail, fetchStart, loginSuccess, logoutSuccess, registerSuccess } from "../features/authSlice";
 
 
 const useAuthCall = () => {
@@ -37,11 +37,10 @@ const useAuthCall = () => {
 
 
   const login = async (userData) => {
-    const BASE_URL = "https://14164.fullstack.clarusway.com";
-    dispatch(fetchStart())
+       dispatch(fetchStart())
     try {
       const { data } = await axios.post(
-        `${BASE_URL}/account/auth/login/`,
+        `${import.meta.env.VITE_BASE_URL}/account/auth/login/`,
         userData
       );
       dispatch(loginSuccess(data))
@@ -50,17 +49,15 @@ const useAuthCall = () => {
     } catch (error) {
       console.log(error);
       dispatch(fetchFail())
-      toastErrorNotify("Can not log in!")
+      toastErrorNotify(error.response.data.non_field_errors[0])
     }
   };
 
   const logout = async () => {
-    const BASE_URL = "https://14164.fullstack.clarusway.com";
-    dispatch(fetchStart())
+        dispatch(fetchStart())
     try {
-       await axios.post(
-        `${BASE_URL}/account/auth/logout/`);
-      dispatch(logoutSuccess)
+       await axios.post(`${import.meta.env.VITE_BASE_URL}/account/auth/logout/`);
+      dispatch(logoutSuccess())
       navigate("/")
       toastSuccessNotify("Logged out successfully");
     } catch (error) {
@@ -70,7 +67,24 @@ const useAuthCall = () => {
     }
   };
 
-  return { login,logout }
+  const register = async (userData) => {
+    dispatch(fetchStart())
+ try {
+   const { data } = await axios.post(
+     `${import.meta.env.VITE_BASE_URL}/account/register/`,
+     userData
+   );
+   dispatch(registerSuccess(data))
+   navigate("/stock")
+   toastSuccessNotify("Registration successful");
+ } catch (error) {
+   console.log(error);
+   dispatch(fetchFail())
+   toastErrorNotify("Registration failed")
+ }
+};
+
+  return { login,logout,register }
 }
 
 export default useAuthCall
