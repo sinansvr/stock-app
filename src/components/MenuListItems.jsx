@@ -19,7 +19,7 @@ const icons = [
       url: "/stock/",
     },
     {
-      title: "Purchase",
+      title: "Purchases",
       icon: <ShoppingCartIcon />,
       url: "/stock/purchases/",
     },
@@ -56,7 +56,14 @@ const MenuListItems = () => {
     return (
         <div><List>
             {icons.map((item, index) => (
-                <ListItem key={index} disablePadding onClick={()=>navigate(item.url)}>
+                <ListItem key={index} disablePadding 
+                onClick={()=>{item.url.includes("http" || "www") ? window.open(item.url,"_blank") : navigate(item.url)}}
+                sx={{
+                  color:"white",
+                  "& .MuiSvgIcon-root":{color:"white"},
+                  "&:hover":{color:"red"},
+                  "&:hover .MuiSvgIcon-root":{color:"red"}
+                }}>
                     <ListItemButton>
                         <ListItemIcon>
                            {item.icon}
