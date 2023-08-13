@@ -2,18 +2,24 @@ import { Typography, Button } from "@mui/material"
 // import { Button } from "@mui/material/Button"
 import axios from "axios"
 import { useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchFail, fetchStart, getFirmsSuccess } from "../features/stockSlice"
 
 
 
 
 const Firms = () => {
   const { token } = useSelector(state => state.auth)
+  const dispatch= useDispatch()
 
+  dispatch(fetchStart())
   const getFirms = async () => {
     try {
       const { data } = await axios(`${import.meta.env.VITE_BASE_URL}/stock/firms/`, { headers: { Authorization: `Token ${token}` } })
+      dispatch(getFirmsSuccess(data))
+
     } catch (error) {
+      dispatch(fetchFail())
       console.log(error)
     }
   }
